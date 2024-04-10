@@ -1,8 +1,10 @@
 
-# Welcome to your CDK Python project!
+# cdk-app-python
 
-You should explore the contents of this project. It demonstrates a CDK app with an instance of a stack (`my_first_cdk_app_stack`)
-which contains an Amazon SQS queue that is subscribed to an Amazon SNS topic.
+This project creates CDK app with an instance of a stack (`my_first_cdk_app_stack`)
+which creates a simple `EKS cluster`, a `SSM parameter` with the value `development`, `staging` and `production`, a `custom resource` 
+backed by a `lambda function` that returns a value based on the environment from ssm and then, as a final step, it creates a nginx `helm chart` 
+that uses this returned value as parameter to define the replicas.
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
@@ -33,19 +35,40 @@ If you are a Windows platform, you would activate the virtualenv like this:
 
 Once the virtualenv is activated, you can install the required dependencies.
 
+**NOTE**: Please take into account that you need to execute the pip command from the virtual 
+enviroment, instead of the one configured in your machine globally.
 ```
 $ pip install -r requirements.txt
 ```
 
-At this point you can now synthesize the CloudFormation template for this code.
 
+## CDK Execution ##
+
+You need to configure your AWS credentials
+
+-> On Mac/Linux: ~/.aws/credentials
+
+-> On Windows: C:\Users\username\.aws\credentials
+
+Use this link as reference -> https://docs.aws.amazon.com/powershell/latest/userguide/specifying-your-aws-credentials.html
+
+At this point you can now synthesize the CloudFormation template for this code. This project should be executed using a parameter
+from `development`, `staging` and `production`
+
+
+To verify composition of template:
 ```
-$ cdk synth
+$ cdk synth --parameters environment=development
 ```
 
-You can now begin exploring the source code, contained in the hello directory.
-There is also a very trivial test included that can be run like this:
 
+To create resources:
+```
+$ cdk deploy --parameters environment=production
+```
+
+
+There is a test configured that you can execute as well:
 ```
 $ pytest
 ```
