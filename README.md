@@ -3,8 +3,12 @@
 
 This project creates CDK app with an instance of a stack (`my_first_cdk_app_stack`)
 which creates a simple `EKS cluster`, a `SSM parameter` with the value `development`, `staging` and `production`, a `custom resource` 
-backed by a `lambda function` that returns a value based on the environment from ssm and then, as a final step, it creates a nginx `helm chart` 
+backed by a `lambda function` that returns a value in SSM based on the environment. It returns 1 if the environment is `development`, 
+2 if the environment is `production` or `staging` and then, as a final step, it creates a nginx `helm chart` 
 that uses this returned value as parameter to define the replicas.
+
+![image](image/diagram.png)
+
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
