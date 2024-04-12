@@ -14,8 +14,11 @@ from aws_cdk import (
   CfnParameter as parameter,
   CfnOutput as output,
   Token as token
-
 )
+
+from aws_cdk.lambda_layer_kubectl import KubectlLayer
+
+
 
 import json
 
@@ -51,8 +54,7 @@ class MyFirstCdkAppStack(stack):
                                 "logs:CreateLogGroup",
                                 "logs:CreateLogStream",
                                 "logs:PutLogEvents", 
-                                "ssm:*",
-                                "lambda:InvokeFunction",
+                                "ssm:*"
                             ],
                             resources=["*"],
                             effect=iam.Effect.ALLOW,
@@ -124,12 +126,14 @@ class MyFirstCdkAppStack(stack):
                 iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEKS_CNI_Policy"),
             ])
 
+
         # EKS cluster
         eks_cluster = eks_objects.Cluster(
             self, 'eks-cluster',
             cluster_name="my-test-cluster",
             version=eks_objects.KubernetesVersion.V1_29,
-            default_capacity=0,  
+            default_capacity=0, 
+            kubectl_layer=KubectlLayer(self, "kubectl")
         )
 
         # EKS node group
